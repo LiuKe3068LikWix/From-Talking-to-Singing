@@ -1,27 +1,82 @@
 # From Talking to Singing: A New Challenge for Audio-Visual Deepfake Detection
 
-Official repository for the ICML 2026 paper:
+Official inference code for our ICML 2026 paper. This repository provides the
+**T-AVFD** model, the complete original checkpoint, and evaluation code for the
+**Singing Head DeepFake (SHDF)** dataset.
 
-**From Talking to Singing: A New Challenge for Audio-Visual Deepfake Detection**
+Project page: https://liuke3068likwix.github.io/SingingHead-DeepFake/
 
-> Code and dataset will be released soon.
+## Installation
 
-## Overview
-With rapid advances in audio-visual generative models, reliable forgery detection becomes increasingly critical. Existing methods for audio-visual deepfake detection typically rely on cross-modal inconsistencies. In singing, rhythmic vocalization weakens this coupling and introduces a nontrivial domain shift, substantially degrading detection performance. We construct the Singing Head DeepFake (SHDF) dataset using rhythm-aware generative models to fill the gap in singing benchmarks. To cope with cross-scenario domain shifts, we propose a Text-guided Audio-Visual Forgery Detection (T-AVFD) framework that generalizes across both talking and singing scenarios. T-AVFD comprises a facial authenticity pattern learner and a multi-modal differential weight learning module. The pattern learner aligns facial features with multi-granularity textual descriptions to learn generalizable authenticity patterns. The weight learning module preserves intrinsic audio–visual consistency and adaptively integrates it with authenticity patterns via differential weighting. Extensive experiments on multiple talking head deepfake datasets and SHDF show consistent improvements over existing baselines and strong robustness under diverse perturbations.
+```bash
+conda create -n tavfd python=3.10 -y
+conda activate tavfd
+pip install -r requirements.txt
+```
 
+## Checkpoint
 
-## Release
+Download the complete original ICML checkpoint from
+[Google Drive](https://drive.google.com/drive/folders/1frssYQ54WNDkjJ-Nde_-Kv_recUCr2Rr)
+and place it at:
 
-- Code: Coming soon.
-- Dataset: Coming soon.
+```text
+checkpoints/TAVFD.pt
+```
+
+## SHDF features
+
+Download the processed SHDF NPZ package from
+[Google Drive](https://drive.google.com/drive/folders/1frssYQ54WNDkjJ-Nde_-Kv_recUCr2Rr)
+and extract it under the `data` directory as follows:
+
+```text
+data/SHDF_features/
+  0_real/*.npz
+  1_fake/*.npz
+```
+
+Each NPZ contains:
+
+* `visual`: `[T, 1024]`
+* `audio`: `[T, 1024]`
+* `global`: `[1, 768]` or `[768]`
+* `local`: optional compatibility field
+
+## Evaluation
+
+```bash
+python eval.py --data_root data/SHDF_features --device cuda:0
+```
+
+The script loads `checkpoints/TAVFD.pt` by default and evaluates the NPZ feature
+files under the `0_real` and `1_fake` subdirectories. It reports AP and AUC and
+saves:
+
+```text
+outputs/SHDF_scores.csv
+outputs/SHDF_scores.json
+```
+
+Labels are `0 = real` and `1 = fake`. Higher scores indicate a greater
+likelihood of being fake.
+
+The interface for other processed datasets is also retained:
+
+```bash
+python eval.py --metadata /path/to/test.csv --data_root /path/to/npz_root --output outputs/other_scores.csv --device cuda:0
+```
+
+The metadata CSV must contain `path,label` columns and use the same NPZ format.
 
 ## Citation
 
 ```bibtex
 @inproceedings{liu2026from,
-  title={From Talking to Singing: A New Challenge for Audio-Visual Deepfake Detection},
-  author={Ke, Liu and Jiwei, Wei and Wenyu, Zhang and Shuchang, Zhou and Ruikun, Chai and Yutao, Dai and Chaoning, Zhang and Yang, Yang},
-  booktitle={International Conference on Machine Learning},
-  year={2026},
-  organization={PMLR}
-
+  title        = {From Talking to Singing: A New Challenge for Audio-Visual Deepfake Detection},
+  author       = {Liu, Ke and Wei, Jiwei and Zhang, Wenyu and Zhou, Shuchang and Chai, Ruikun and Dai, Yutao and Zhang, Chaoning and Yang, Yang},
+  booktitle    = {International Conference on Machine Learning},
+  year         = {2026},
+  organization = {PMLR}
+}
+```
