@@ -17,7 +17,7 @@ pip install -r requirements.txt
 ## Checkpoint
 
 Download the complete original ICML checkpoint from
-[Google Drive](https://drive.google.com/drive/folders/1frssYQ54WNDkjJ-Nde_-Kv_recUCr2Rr)
+[Google Drive](https://drive.google.com/drive/folders/1frssYQ54WNDkjJ-Nde_-Kv_recUCr2Rr?usp=sharing)
 and place it at:
 
 ```text
@@ -27,7 +27,7 @@ checkpoints/TAVFD.pt
 ## SHDF features
 
 Download the processed SHDF NPZ package from
-[Google Drive](https://drive.google.com/drive/folders/1frssYQ54WNDkjJ-Nde_-Kv_recUCr2Rr)
+[Google Drive](https://drive.google.com/drive/folders/1frssYQ54WNDkjJ-Nde_-Kv_recUCr2Rr?usp=sharing)
 and extract it under the `data` directory as follows:
 
 ```text
